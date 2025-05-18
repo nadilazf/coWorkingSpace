@@ -74,7 +74,7 @@ func adminMenu() {
 		case 3:
 			return
 		default:
-			fmt.Println("Pilihan tidak valid.")
+			fmt.Println("Pilihan tidak validddd.")
 		}
 	}
 }
