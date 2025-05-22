@@ -135,17 +135,55 @@ func tampilkanDaftarRuangKerja() {
     }
 }
 
+func tampilkanUlasanRuangKerja() {
+	if jumlahRuang == 0 {
+		fmt.Println("Belum ada ruang kerja yang tersedia.")
+		return
+	}
+
+	var id int
+	fmt.Print("Masukkan ID ruang kerja yang ingin dilihat ulasannya: ")
+	fmt.Scan(&id)
+
+	index := -1
+	for i := 0; i < jumlahRuang; i++ {
+		if daftarRuangKerja[i].id == id {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		fmt.Println("Ruang kerja tidak ditemukan ❌")
+		return
+	}
+
+	ruang := daftarRuangKerja[index]
+
+	if ruang.jumlahUlasan == 0 {
+	fmt.Printf("Belum ada ulasan untuk ruang kerja '%s'.\n", ruang.nama)
+	return
+}
+
+	fmt.Printf("Ulasan untuk ruang kerja '%s':\n", ruang.nama)
+	for i := 0; i < ruang.jumlahUlasan; i++ {
+		ulasan := ruang.ulasan[i]
+		fmt.Printf("- %s beri rating %.1f ⭐\n Komentar: %s\n", ulasan.namaClient, ulasan.rating, ulasan.komentar)
+	}
+}
+
 
 func menuAdmin() {
 	for {
 		fmt.Println("\n===== MENU ADMIN 👤 =====")
 		fmt.Println("1. Tambah ruang kerja ➕")
-		fmt.Println("2. Tampilkan semua ruang kerja 🏢")
-		fmt.Println("3. Edit ruang kerja ✏️")
-		fmt.Println("4. Hapus ruang kerja 🗑️")
-		fmt.Println("4. Kembali ke menu utama 🔙")
-		fmt.Println("5. Keluar 🚪")
-		fmt.Print("Pilih opsi (1-6): ")
+		fmt.Println("2. Edit ruang kerja ✏️")
+		fmt.Println("3. Hapus ruang kerja 🗑️")
+		fmt.Println("4. Tampilkan semua ruang kerja 🏢")
+		fmt.Println("5. Lihat ulasan ruang kerja 📝")
+		fmt.Println("6. Kembali ke menu utama 🔙")
+		fmt.Println("7. Keluar 🚪")
+		fmt.Print("Pilih opsi (1-7): ")
 
 		var opsi int
 		fmt.Scan(&opsi)
@@ -154,14 +192,16 @@ func menuAdmin() {
 		case 1:
 			tambahRuangKerja()
 		case 2:
-			tampilkanDaftarRuangKerja()
-		case 3:
 			editRuangKerja()
-		case 4:
+		case 3:
 			hapusRuangKerja()
+		case 4:
+			tampilkanDaftarRuangKerja()
 		case 5:
-			return
+			tampilkanUlasanRuangKerja()
 		case 6:
+			return
+		case 7:
 			fmt.Println("Program selesai")
 			exit()
 		default:
@@ -169,6 +209,7 @@ func menuAdmin() {
 		}
 	}
 }
+
 
 func menuClient() {
 	fmt.Println("=== MENU CLIENT 👥 ===")
