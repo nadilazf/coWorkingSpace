@@ -20,9 +20,28 @@ const MAKS_RUANG = 10
 var daftarRuangKerja [MAKS_RUANG]RuangKerja
 var jumlahRuang int = 0
 
+func tambahRuangKerja(){
+	if jumlahRuang >= MAKS_RUANG{
+		fmt.Println("Jumlah ruang kerja sudah mencapai batas maksimum.")
+		return
+	}
 
+	var ruang RuangKerja
+	fmt.Println("Masukkan ID ruang kerja:")
+	fmt.Scan(&ruang.id)
+	fmt.Println("Masukkan nama ruang kerja:")
+	fmt.Scan(&ruang.nama)
+	fmt.Println("Masukkan lokasi ruang kerja:")
+	fmt.Scan(&ruang.lokasi)
+	fmt.Println("Masukkan harga sewa ruang kerja:")
+	fmt.Scan(&ruang.hargaSewa)
 
+	daftarRuangKerja[jumlahRuang] = ruang
+	jumlahRuang++
+	
+	fmt.Println("Ruang kerja berhasil ditambahkan.")
+}
 
 func main() {
-	fmt.Println("")
+	tambahRuangKerja()
 }
