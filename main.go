@@ -42,6 +42,40 @@ func tambahRuangKerja(){
 	fmt.Println("Ruang kerja berhasil ditambahkan.")
 }
 
+func editRuangKerja(){
+	if jumlahRuang == 0 {
+		fmt.Println("Belum ada ruang kerja yang bisa diedit.")
+		return
+	}
+
+	var id int
+	fmt.Print("Masukkan ID ruang kerja yang ingin diubah:")
+	fmt.Scan(&id)
+
+	index := -1
+	for i := 0; i < jumlahRuang; i++ {
+		if daftarRuangKerja[i].id == id {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		fmt.Println("Ruang kerja dengan ID tersebut tidak ditemukan.")
+		return
+	}
+
+	fmt.Println("Masukkan data baru:")
+	fmt.Print("Nama baru: ")
+	fmt.Scan(&daftarRuangKerja[index].nama)
+	fmt.Print("Lokasi baru: ")
+	fmt.Scan(&daftarRuangKerja[index].lokasi)
+	fmt.Print("Harga sewa baru: ")
+	fmt.Scan(&daftarRuangKerja[index].hargaSewa)
+
+	fmt.Println("Data ruang kerja berhasil diperbarui.")
+}	
+
 func tampilkanDaftarRuangKerja(){
 	if jumlahRuang == 0 {
 		fmt.Println("Belum ada ruang kerja yang terdaftar.")
@@ -58,4 +92,5 @@ func tampilkanDaftarRuangKerja(){
 func main() {
 	tambahRuangKerja()
 	tampilkanDaftarRuangKerja()
+	editRuangKerja()
 }
