@@ -39,7 +39,7 @@ func tambahRuangKerja(){
 	daftarRuangKerja[jumlahRuang] = ruang
 	jumlahRuang++
 	
-	fmt.Println("Ruang kerja berhasil ditambahkan.")
+	fmt.Println("Ruang kerja berhasil ditambahkan ✅")
 }
 
 func editRuangKerja(){
@@ -61,7 +61,7 @@ func editRuangKerja(){
 	}
 
 	if index == -1 {
-		fmt.Println("Ruang kerja dengan ID tersebut tidak ditemukan.")
+		fmt.Println("Ruang kerja dengan ID tersebut tidak ditemukan ✅")
 		return
 	}
 
@@ -73,12 +73,12 @@ func editRuangKerja(){
 	fmt.Print("Harga sewa baru: ")
 	fmt.Scan(&daftarRuangKerja[index].hargaSewa)
 
-	fmt.Println("Data ruang kerja berhasil diperbarui.")
+	fmt.Println("Data ruang kerja berhasil diperbarui ✅")
 }	
 
 func tampilkanDaftarRuangKerja(){
 	if jumlahRuang == 0 {
-		fmt.Println("Belum ada ruang kerja yang terdaftar.")
+		fmt.Println("Belum ada ruang kerja yang terdaftar")
 		return
 	}
 
@@ -89,8 +89,70 @@ func tampilkanDaftarRuangKerja(){
 	}
 }
 
+func menuAdmin() {
+	for {
+		fmt.Println("\n===== MENU ADMIN 👤 =====")
+		fmt.Println("1. Tambah ruang kerja ➕")
+		fmt.Println("2. Tampilkan semua ruang kerja 🏢")
+		fmt.Println("3. Edit ruang kerja ✏️")
+		fmt.Println("4. Kembali ke menu utama 🔙")
+		fmt.Println("5. Keluar 🚪")
+		fmt.Print("Pilih opsi (1-5): ")
+
+		var opsi int
+		fmt.Scan(&opsi)
+
+		switch opsi {
+		case 1:
+			tambahRuangKerja()
+		case 2:
+			tampilkanDaftarRuangKerja()
+		case 3:
+			editRuangKerja()
+		case 4:
+			return
+		case 5:
+			fmt.Println("Program selesai")
+			exit()
+		default:
+			fmt.Println("Pilihan tidak valid ❌")
+		}
+	}
+}
+
+func menuClient() {
+	fmt.Println("=== MENU CLIENT 👥 ===")
+	fmt.Println("(Masih dalam pengembangan ⚒️)")
+	fmt.Printf("Kembali ke menu utama...\n")
+}
+
 func main() {
-	tambahRuangKerja()
-	tampilkanDaftarRuangKerja()
-	editRuangKerja()
+	for {
+		fmt.Println("=== SELAMAT DATANG DI COWORKING APP 🏢📱 ===")
+		fmt.Println("Pilih peran Anda:")
+		fmt.Println("1. Admin 👤")
+		fmt.Println("2. Client 👥")
+		fmt.Println("3. Keluar 🚪")
+		fmt.Print("Masukkan pilihan (1-3): ")
+
+		var pilihan int
+		fmt.Scan(&pilihan)
+
+		switch pilihan {
+		case 1:
+			menuAdmin()
+		case 2:
+			menuClient()
+		case 3:
+			fmt.Println("Sampai Jumpa 👋")
+			return
+		default:
+			fmt.Println("Pilihan tidak valid ❌")
+		}
+	}
+}
+
+func exit() {
+	fmt.Println("Terima Kasih dan Sampai Jumpa 👋")
+	panic("Exit 🚪")
 }
