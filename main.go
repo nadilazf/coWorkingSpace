@@ -135,6 +135,32 @@ func tampilkanDaftarRuangKerja() {
     }
 }
 
+func tampilkanDaftarRuangKerjaClient(){
+	if jumlahRuang == 0 {
+		fmt.Println("Belum ada ruang kerja yang terdaftar")
+		return
+	}
+
+	fmt.Println("Daftar ruang kerja 🏢")
+	  for i := 0; i < jumlahRuang; i++ {
+        ruang := daftarRuangKerja[i]
+
+        if ruang.jumlahUlasan == 0 {
+            fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d, Rating: Belum ada rating\n",
+                ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa)
+        } else {
+            var totalRating float64 = 0
+            for j := 0; j < ruang.jumlahUlasan; j++ {
+                totalRating += ruang.ulasan[j].rating
+            }
+            avgRating := totalRating / float64(ruang.jumlahUlasan)
+
+            fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d, Rating: %.2f (%d ulasan)\n",
+                ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa, avgRating, ruang.jumlahUlasan)
+        }
+    }
+}
+
 func tampilkanUlasanRuangKerja() {
 	if jumlahRuang == 0 {
 		fmt.Println("Belum ada ruang kerja yang tersedia.")
@@ -212,10 +238,26 @@ func menuAdmin() {
 
 
 func menuClient() {
-	fmt.Println("=== MENU CLIENT 👥 ===")
-	fmt.Println("(Masih dalam pengembangan ⚒️)")
-	fmt.Printf("Kembali ke menu utama...\n")
+    for {
+        fmt.Println("\n===== MENU CLIENT 👥 =====")
+        fmt.Println("1. Tampilkan daftar ruang kerja 🏢")
+        fmt.Println("2. Kembali ke menu utama 🔙")
+        fmt.Print("Pilih opsi (1-2): ")
+
+        var opsi int
+        fmt.Scan(&opsi)
+
+        switch opsi {
+        case 1:
+            tampilkanDaftarRuangKerjaClient()
+        case 2:
+            return
+        default:
+            fmt.Println("Pilihan tidak valid ❌")
+        }
+    }
 }
+
 
 func main() {
 	for {
