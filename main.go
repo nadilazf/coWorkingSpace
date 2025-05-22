@@ -29,8 +29,6 @@ func tambahRuangKerja(){
 	var ruang RuangKerja
 	ruang.id = jumlahRuang + 1
 	
-	fmt.Println("Masukkan ID ruang kerja:")
-	fmt.Scan(&ruang.id)
 	fmt.Println("Masukkan nama ruang kerja:")
 	fmt.Scan(&ruang.nama)
 	fmt.Println("Masukkan lokasi ruang kerja:")
@@ -63,7 +61,7 @@ func editRuangKerja(){
 	}
 
 	if index == -1 {
-		fmt.Println("Ruang kerja dengan ID tersebut tidak ditemukan ✅")
+		fmt.Println("Ruang kerja dengan ID tersebut tidak ditemukan ❌")
 		return
 	}
 
@@ -76,7 +74,38 @@ func editRuangKerja(){
 	fmt.Scan(&daftarRuangKerja[index].hargaSewa)
 
 	fmt.Println("Data ruang kerja berhasil diperbarui ✅")
-}	
+}
+
+func hapusRuangKerja(){
+	if jumlahRuang == 0 {
+		fmt.Println("Belum ada ruang kerja yang bisa dihapus.")
+		return
+	}
+
+	var id int
+	fmt.Println("Masukkan ID ruang kerja yang ingin dihapus: ")
+	fmt.Scan(&id)
+
+	index := -1
+	for i := 0; i < jumlahRuang; i++ {
+		if daftarRuangKerja[i].id == id {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		fmt.Println("Ruang kerja dengan ID tersebut tidak ditemukan ❌")
+	}
+
+	for i := index; i < jumlahRuang-1; i++ {
+		daftarRuangKerja[i] = daftarRuangKerja[i+1]
+	}
+
+	jumlahRuang--
+
+	fmt.Println("Ruang kerja berhasil dihapus ✅")
+}
 
 func tampilkanDaftarRuangKerja(){
 	if jumlahRuang == 0 {
@@ -84,7 +113,7 @@ func tampilkanDaftarRuangKerja(){
 		return
 	}
 
-	fmt.Println("Daftar ruang kerja:")
+	fmt.Println("Daftar ruang kerja 🏢")
 	for i := 0; i < jumlahRuang; i++ {
 		ruang := daftarRuangKerja[i]
 		fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d\n", ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa)
@@ -97,9 +126,10 @@ func menuAdmin() {
 		fmt.Println("1. Tambah ruang kerja ➕")
 		fmt.Println("2. Tampilkan semua ruang kerja 🏢")
 		fmt.Println("3. Edit ruang kerja ✏️")
+		fmt.Println("4. Hapus ruang kerja 🗑️")
 		fmt.Println("4. Kembali ke menu utama 🔙")
 		fmt.Println("5. Keluar 🚪")
-		fmt.Print("Pilih opsi (1-5): ")
+		fmt.Print("Pilih opsi (1-6): ")
 
 		var opsi int
 		fmt.Scan(&opsi)
@@ -112,8 +142,10 @@ func menuAdmin() {
 		case 3:
 			editRuangKerja()
 		case 4:
-			return
+			hapusRuangKerja()
 		case 5:
+			return
+		case 6:
 			fmt.Println("Program selesai")
 			exit()
 		default:
