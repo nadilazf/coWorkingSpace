@@ -27,6 +27,8 @@ func tambahRuangKerja(){
 	}
 
 	var ruang RuangKerja
+	ruang.id = jumlahRuang + 1
+	
 	fmt.Println("Masukkan ID ruang kerja:")
 	fmt.Scan(&ruang.id)
 	fmt.Println("Masukkan nama ruang kerja:")
