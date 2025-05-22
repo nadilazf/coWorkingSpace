@@ -13,6 +13,8 @@ type RuangKerja struct {
 	nama      string
 	lokasi    string
 	hargaSewa int
+	ulasan [10]Ulasan
+	jumlahUlasan int
 }
 
 const MAKS_RUANG = 10
@@ -107,18 +109,32 @@ func hapusRuangKerja(){
 	fmt.Println("Ruang kerja berhasil dihapus ✅")
 }
 
-func tampilkanDaftarRuangKerja(){
-	if jumlahRuang == 0 {
-		fmt.Println("Belum ada ruang kerja yang terdaftar")
-		return
-	}
+func tampilkanDaftarRuangKerja() {
+    if jumlahRuang == 0 {
+        fmt.Println("Belum ada ruang kerja yang terdaftar")
+        return
+    }
 
-	fmt.Println("Daftar ruang kerja 🏢")
-	for i := 0; i < jumlahRuang; i++ {
-		ruang := daftarRuangKerja[i]
-		fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d\n", ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa)
-	}
+    fmt.Println("Daftar ruang kerja 🏢")
+    for i := 0; i < jumlahRuang; i++ {
+        ruang := daftarRuangKerja[i]
+
+        if ruang.jumlahUlasan == 0 {
+            fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d, Rating: Belum ada rating\n",
+                ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa)
+        } else {
+            var totalRating float64 = 0
+            for j := 0; j < ruang.jumlahUlasan; j++ {
+                totalRating += ruang.ulasan[j].rating
+            }
+            avgRating := totalRating / float64(ruang.jumlahUlasan)
+
+            fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d, Rating: %.2f (%d ulasan)\n",
+                ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa, avgRating, ruang.jumlahUlasan)
+        }
+    }
 }
+
 
 func menuAdmin() {
 	for {
