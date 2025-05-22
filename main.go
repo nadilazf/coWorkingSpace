@@ -42,6 +42,20 @@ func tambahRuangKerja(){
 	fmt.Println("Ruang kerja berhasil ditambahkan.")
 }
 
+func tampilkanDaftarRuangKerja(){
+	if jumlahRuang == 0 {
+		fmt.Println("Belum ada ruang kerja yang terdaftar.")
+		return
+	}
+
+	fmt.Println("Daftar ruang kerja:")
+	for i := 0; i < jumlahRuang; i++ {
+		ruang := daftarRuangKerja[i]
+		fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d\n", ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa)
+	}
+}
+
 func main() {
 	tambahRuangKerja()
+	tampilkanDaftarRuangKerja()
 }
