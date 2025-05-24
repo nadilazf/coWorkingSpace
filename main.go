@@ -2,22 +2,31 @@ package main
 
 import "fmt"
 
+
 type Ulasan struct {
 	namaClient string
 	rating     float64
 	komentar   string
 }
 
+type Fasilitas struct {
+	namaFasilitas string
+}
+
 type RuangKerja struct {
 	id           int
 	nama         string
 	lokasi       string
+	fasilitas    [5]Fasilitas
 	hargaSewa    int
 	ulasan       [10]Ulasan
 	jumlahUlasan int
+	jumlahFasilitas int
 }
 
+
 const MAKS_RUANG = 10
+const MAKS_FASILITAS = 5
 
 var daftarRuangKerja [MAKS_RUANG]RuangKerja
 var jumlahRuang int = 0
@@ -31,18 +40,40 @@ func tambahRuangKerja() {
 	var ruang RuangKerja
 	ruang.id = jumlahRuang + 1
 
-	fmt.Println("Masukkan nama ruang kerja:")
+	fmt.Print("Masukkan nama ruang kerja: ")
 	fmt.Scan(&ruang.nama)
-	fmt.Println("Masukkan lokasi ruang kerja:")
+
+	fmt.Print("Masukkan lokasi ruang kerja: ")
 	fmt.Scan(&ruang.lokasi)
-	fmt.Println("Masukkan harga sewa ruang kerja:")
+
+	fmt.Print("Masukkan harga sewa ruang kerja: ")
 	fmt.Scan(&ruang.hargaSewa)
+	fmt.Scan() // buang newline sisa scan
+
+	// Input fasilitas manual, maksimal 5
+	fmt.Println("Masukkan fasilitas ruang kerja satu per satu (max 5), ketik 'selesai' untuk berhenti:")
+	count := 0
+	for count < MAKS_FASILITAS {
+		fmt.Printf("Fasilitas %d: ", count+1)
+		var fasilitasInput string
+		fmt.Scan(&fasilitasInput)
+		if fasilitasInput == "selesai" {
+			break
+		}
+		if fasilitasInput != "" {
+			ruang.fasilitas[count] = Fasilitas{namaFasilitas: fasilitasInput}
+			count++
+		}
+	}
+	ruang.jumlahFasilitas = count
 
 	daftarRuangKerja[jumlahRuang] = ruang
 	jumlahRuang++
 
 	fmt.Println("Ruang kerja berhasil ditambahkan ✅")
 }
+
+
 
 func editRuangKerja() {
 	if jumlahRuang == 0 {
@@ -51,7 +82,7 @@ func editRuangKerja() {
 	}
 
 	var id int
-	fmt.Print("Masukkan ID ruang kerja yang ingin diubah:")
+	fmt.Print("Masukkan ID ruang kerja yang ingin diubah: ")
 	fmt.Scan(&id)
 
 	index := -1
@@ -68,15 +99,35 @@ func editRuangKerja() {
 	}
 
 	fmt.Println("Masukkan data baru:")
-	fmt.Print("Nama baru: ")
+	fmt.Print("Masukkan nama ruang kerja: ")
 	fmt.Scan(&daftarRuangKerja[index].nama)
-	fmt.Print("Lokasi baru: ")
+
+	fmt.Print("Masukkan lokasi ruang kerja: ")
 	fmt.Scan(&daftarRuangKerja[index].lokasi)
-	fmt.Print("Harga sewa baru: ")
+
+	fmt.Print("Masukkan harga sewa ruang kerja: ")
 	fmt.Scan(&daftarRuangKerja[index].hargaSewa)
+	fmt.Scan()
+
+	fmt.Println("Masukkan fasilitas baru untuk ruang kerja (maks 5), ketik 'selesai' untuk berhenti:")
+	count := 0
+	for count < MAKS_FASILITAS {
+		fmt.Printf("Fasilitas %d: ", count+1)
+		var fasilitasInput string
+		fmt.Scan(&fasilitasInput)
+		if fasilitasInput == "selesai" {
+			break
+		}
+		if fasilitasInput != "" {
+			daftarRuangKerja[index].fasilitas[count] = Fasilitas{namaFasilitas: fasilitasInput}
+			count++
+		}
+	}
+	daftarRuangKerja[index].jumlahFasilitas = count
 
 	fmt.Println("Data ruang kerja berhasil diperbarui ✅")
 }
+
 
 func hapusRuangKerja() {
 	if jumlahRuang == 0 {
@@ -120,8 +171,8 @@ func tampilkanDaftarRuangKerja() {
 		ruang := daftarRuangKerja[i]
 
 		if ruang.jumlahUlasan == 0 {
-			fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d, Rating: Belum ada rating\n",
-				ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa)
+			fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Fasilitas: %d, Harga Sewa: %d, Rating: Belum ada rating\n",
+				ruang.id, ruang.nama, ruang.lokasi,ruang.jumlahFasilitas, ruang.hargaSewa)
 		} else {
 			var totalRating float64 = 0
 			for j := 0; j < ruang.jumlahUlasan; j++ {
@@ -129,8 +180,8 @@ func tampilkanDaftarRuangKerja() {
 			}
 			avgRating := totalRating / float64(ruang.jumlahUlasan)
 
-			fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga Sewa: %d, Rating: %.2f (%d ulasan)\n",
-				ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa, avgRating, ruang.jumlahUlasan)
+			fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Fasilitas: %d, Harga Sewa: %d, Rating: %.2f (%d ulasan)\n",
+				ruang.id, ruang.nama, ruang.lokasi, ruang.jumlahFasilitas, ruang.hargaSewa, avgRating, ruang.jumlahUlasan)
 		}
 	}
 }
@@ -378,6 +429,56 @@ func menuDetailRuang(id int) {
 	}
 }
 
+func searchRuang(keyword string){
+	if jumlahRuang == 0 {
+		fmt.Println("Belum ada ruang kerja yang terdaftar.")
+	}
+
+	idx := binarySearchNama(keyword)
+
+	if idx != -1 {
+		ruang := daftarRuangKerja[idx]
+		fmt.Println("Hasil pencarian ditemukan:")
+		fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga: %d, Rating: %.2f\n",
+			ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa, rataRating(ruang))
+	} else {
+		fmt.Println("Mencari berdasarkan lokasi...")
+
+		ketemu := false
+
+		for i := 0; i < jumlahRuang; i++ {
+			if daftarRuangKerja[i].lokasi == keyword {
+				ruang := daftarRuangKerja[i]
+				fmt.Println("Ditemukan berdasarkan lokasi:")
+				fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Harga: %d, Rating: %.2f\n",
+					ruang.id, ruang.nama, ruang.lokasi, ruang.hargaSewa, rataRating(ruang))
+				ketemu = true
+			}
+		}
+		if !ketemu {
+			fmt.Println("Tidak ada ruang kerja dengan nama atau lokasi tersebut.")
+		}
+	}
+}
+
+func binarySearchNama(keyword string) int {
+	left := 0
+	right := jumlahRuang - 1
+
+	for left <= right {
+		mid := (left + right) / 2
+		if daftarRuangKerja[mid].nama == keyword {
+			return mid
+		} else if keyword < daftarRuangKerja[mid].nama {
+			right = mid - 1
+		} else {
+			left = mid + 1
+		}
+	}
+	return -1
+}
+
+
 func submenuDaftarClient() {
 	for {
 		fmt.Println("\n--- Pilih opsi berikut ---")
@@ -390,11 +491,11 @@ func submenuDaftarClient() {
 		fmt.Scan(&op)
 
 		switch op {
-		// case 1: // buat search tapi masih belum nemu functionnya
-		// 	var key string
-		// 	fmt.Print("Masukkan kata kunci: ")
-		// 	fmt.Scan(&key)
-		// 	searchRuang(key)
+		case 1: // buat search tapi masih belum nemu functionnya
+			var key string
+			fmt.Print("Masukkan nama atau lokasi: ")
+			fmt.Scan(&key)
+			searchRuang(key)
 		case 2:
 			var id int
 			fmt.Print("Masukkan ID ruang: ")
