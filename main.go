@@ -235,6 +235,179 @@ func menuAdmin() {
 	}
 }
 
+func tambahUlasan(id int) {
+	idx := cariIndexRuang(id)
+	if idx == -1 {
+		fmt.Println("Ruang kerja tidak ditemukan")
+		return
+	}
+	if daftarRuangKerja[idx].jumlahUlasan >= 10 {
+		fmt.Println("Slot ulasan penuh untuk ruang ini.")
+		return
+	}
+
+	var nama, komentar string
+	var rating float64
+	fmt.Print("Nama Anda: ")
+	fmt.Scan(&nama)
+	ruang := &daftarRuangKerja[idx]
+	for i := 0; i < ruang.jumlahUlasan; i++ {
+		if ruang.ulasan[i].namaClient == nama {
+			fmt.Println("Nama tersebut sudah pernah memberikan ulasan. Gunakan nama lain.")
+			return
+		}
+	}
+	fmt.Print("Rating (1-5): ")
+	fmt.Scan(&rating)
+	fmt.Print("Komentar: ")
+	fmt.Scan(&komentar)
+
+	ul := Ulasan{namaClient: nama, rating: rating, komentar: komentar}
+	ruang.ulasan[ruang.jumlahUlasan] = ul
+	ruang.jumlahUlasan++
+	fmt.Println("Ulasan ditambahkan ✅")
+}
+
+func cariIndexRuang(id int) int {
+	for i := 0; i < jumlahRuang; i++ {
+		if daftarRuangKerja[i].id == id {
+			return i
+		}
+	}
+	return -1
+}
+
+func rataRating(r RuangKerja) float64 {
+	if r.jumlahUlasan == 0 {
+		return 0
+	}
+	var total float64
+	for i := 0; i < r.jumlahUlasan; i++ {
+		total += r.ulasan[i].rating
+	}
+	return total / float64(r.jumlahUlasan)
+}
+
+func editUlasan(id int) {
+	idx := cariIndexRuang(id)
+	if idx == -1 {
+		fmt.Println("Ruang kerja tidak ditemukan")
+		return
+	}
+
+	var nama string
+	fmt.Print("Masukkan nama Anda (ulasan yg mau diedit): ")
+	fmt.Scan(&nama)
+
+	found := false
+	for i := 0; i < daftarRuangKerja[idx].jumlahUlasan; i++ {
+		if daftarRuangKerja[idx].ulasan[i].namaClient == nama {
+			found = true
+			fmt.Print("Rating baru: ")
+			fmt.Scan(&daftarRuangKerja[idx].ulasan[i].rating)
+			fmt.Print("Komentar baru: ")
+			fmt.Scan(&daftarRuangKerja[idx].ulasan[i].komentar)
+			fmt.Println("Ulasan diupdate ✅")
+			break
+		}
+	}
+	if !found {
+		fmt.Println("Ulasan dengan nama tersebut tidak ditemukan")
+	}
+}
+
+func hapusUlasan(id int) {
+	idx := cariIndexRuang(id)
+	if idx == -1 {
+		fmt.Println("Ruang kerja tidak ditemukan")
+		return
+	}
+
+	var nama string
+	fmt.Print("Masukkan nama Anda (ulasan yg mau dihapus): ")
+	fmt.Scan(&nama)
+
+	for i := 0; i < daftarRuangKerja[idx].jumlahUlasan; i++ {
+		if daftarRuangKerja[idx].ulasan[i].namaClient == nama {
+			for j := i; j < daftarRuangKerja[idx].jumlahUlasan-1; j++ {
+				daftarRuangKerja[idx].ulasan[j] = daftarRuangKerja[idx].ulasan[j+1]
+			}
+			daftarRuangKerja[idx].jumlahUlasan--
+			fmt.Println("Ulasan dihapus ✅")
+			return
+		}
+	}
+	fmt.Println("Ulasan dengan nama tersebut tidak ditemukan")
+}
+
+func menuDetailRuang(id int) {
+	idx := cariIndexRuang(id)
+	if idx == -1 {
+		fmt.Println("Ruang kerja tidak ditemukan")
+		return
+	}
+	r := daftarRuangKerja[idx]
+	fmt.Printf("\n== Detail Ruang ID %d ==\nNama: %s\nLokasi: %s\nHarga: %d\n",
+		r.id, r.nama, r.lokasi, r.hargaSewa)
+	fmt.Printf("Rating: %.2f (%d ulasan)\n\n", rataRating(r), r.jumlahUlasan)
+
+	for {
+		fmt.Println("1. Tambah ulasan")
+		fmt.Println("2. Edit ulasan")
+		fmt.Println("3. Hapus ulasan")
+		// fmt.Println("4. Lihat semua ulasan")
+		fmt.Println("4. Kembali")
+		fmt.Print("Pilih opsi (1-4): ")
+
+		var op int
+		fmt.Scan(&op)
+		switch op {
+		case 1:
+			tambahUlasan(id)
+		case 2:
+			editUlasan(id)
+		case 3:
+			hapusUlasan(id)
+		// case 4:
+		// 	tampilkanUlasanRuangKerja() // buat nampilin ulasan yang udah ditambahin tapi kayaknya belum butuh
+		case 4:
+			return
+		default:
+			fmt.Println("Pilihan tidak valid")
+		}
+	}
+}
+
+func submenuDaftarClient() {
+	for {
+		fmt.Println("\n--- Pilih opsi berikut ---")
+		fmt.Println("1. Search nama / lokasi 🔍")
+		fmt.Println("2. Pilih ruang kerja (input ID) 📄")
+		fmt.Println("3. Kembali ke menu sebelumnya 🔙")
+		fmt.Print("Pilih opsi (1-3): ")
+
+		var op int
+		fmt.Scan(&op)
+
+		switch op {
+		// case 1: // buat search tapi masih belum nemu functionnya
+		// 	var key string
+		// 	fmt.Print("Masukkan kata kunci: ")
+		// 	fmt.Scan(&key)
+		// 	searchRuang(key)
+		case 2:
+			var id int
+			fmt.Print("Masukkan ID ruang: ")
+			fmt.Scan(&id)
+			menuDetailRuang(id)
+		case 3:
+			return
+		default:
+			fmt.Println("Pilihan tidak valid")
+		}
+	}
+}
+
 func menuClient() {
 	for {
 		fmt.Println("=== MENU CLIENT 👥 ===")
@@ -248,7 +421,8 @@ func menuClient() {
 
 		switch opsiClient {
 		case 1:
-			tampilkanDaftarRuangKerja()
+			tampilkanDaftarRuangKerjaClient()
+			submenuDaftarClient()
 		case 2:
 			return
 		case 3:
