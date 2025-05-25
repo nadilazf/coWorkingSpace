@@ -456,7 +456,6 @@ func searchRuang(keyword string) {
 			}
 		}
 
-		// Cek rating
 		if ruang.jumlahUlasan == 0 {
 			fmt.Printf("ID: %d, Nama: %s, Lokasi: %s, Fasilitas: [%s], Harga Sewa: %d, Rating: Belum ada rating\n",
 				ruang.id, ruang.nama, ruang.lokasi, fasilitasStr, ruang.hargaSewa)
