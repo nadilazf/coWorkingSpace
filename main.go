@@ -44,10 +44,6 @@ func tambahRuangKerja() {
 	fmt.Print("Masukkan lokasi ruang kerja: ")
 	fmt.Scan(&ruang.lokasi)
 
-	fmt.Print("Masukkan harga sewa ruang kerja: ")
-	fmt.Scan(&ruang.hargaSewa)
-	fmt.Scan() 
-
 	fmt.Println("Masukkan fasilitas ruang kerja satu per satu (max 5), ketik 'selesai' untuk berhenti:")
 	count := 0
 	for count < MAKS_FASILITAS {
@@ -64,11 +60,15 @@ func tambahRuangKerja() {
 	}
 	ruang.jumlahFasilitas = count
 
+	fmt.Print("Masukkan harga sewa ruang kerja: ")
+	fmt.Scan(&ruang.hargaSewa)
+
 	daftarRuangKerja[jumlahRuang] = ruang
 	jumlahRuang++
 
 	fmt.Println("Ruang kerja berhasil ditambahkan ✅")
 }
+
 
 func editRuangKerja() {
 	if jumlahRuang == 0 {
@@ -100,10 +100,6 @@ func editRuangKerja() {
 	fmt.Print("Masukkan lokasi ruang kerja: ")
 	fmt.Scan(&daftarRuangKerja[index].lokasi)
 
-	fmt.Print("Masukkan harga sewa ruang kerja: ")
-	fmt.Scan(&daftarRuangKerja[index].hargaSewa)
-	fmt.Scan()
-
 	fmt.Println("Masukkan fasilitas baru untuk ruang kerja (maks 5), ketik 'selesai' untuk berhenti:")
 	count := 0
 	for count < MAKS_FASILITAS {
@@ -120,8 +116,12 @@ func editRuangKerja() {
 	}
 	daftarRuangKerja[index].jumlahFasilitas = count
 
+	fmt.Print("Masukkan harga sewa ruang kerja: ")
+	fmt.Scan(&daftarRuangKerja[index].hargaSewa)
+
 	fmt.Println("Data ruang kerja berhasil diperbarui ✅")
 }
+
 
 func hapusRuangKerja() {
 	if jumlahRuang == 0 {
