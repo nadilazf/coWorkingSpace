@@ -143,6 +143,7 @@ func hapusRuangKerja() {
 
 	if index == -1 {
 		fmt.Println("Ruang kerja dengan ID tersebut tidak ditemukan ❌")
+		return
 	}
 
 	for i := index; i < jumlahRuang-1; i++ {
