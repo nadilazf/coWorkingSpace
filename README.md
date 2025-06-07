@@ -2,6 +2,8 @@
 
 Aplikasi berbasis **Golang** untuk mengelola dan mencari co-working space berdasarkan fasilitas, lokasi, harga, dan ulasan pengguna.
 
+![Tampilan Program](display.png)
+
 ## 📌 Deskripsi
 Aplikasi ini ditujukan untuk:
 - **Pemilik co-working space**: mengelola informasi tempatnya.
